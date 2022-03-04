@@ -19,7 +19,12 @@
 <script>
     export default {
         mounted() {
-            console.log('Component mounted.')
+            var people = [
+                { name: "Nedd", surname: "Stark" },
+                { name: "Robb", surname: "Stark" }
+            ]
+            console.table(people)
+            console.count()
         }
     }
 </script>
