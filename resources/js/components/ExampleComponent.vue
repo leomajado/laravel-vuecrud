@@ -24,7 +24,6 @@
                 { name: "Robb", surname: "Stark" }
             ]
             console.table(people)
-            console.count()
         }
     }
 </script>
