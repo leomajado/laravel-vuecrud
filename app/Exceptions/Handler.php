@@ -38,4 +38,19 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $e)
+    {
+        if($request->is('api/*')){
+            $header = ['Content-Type: application/json'];
+
+            return response()->json([
+                'status' => 'Error',
+                'message' => $e->getMessage()
+            ],500,$header);
+        }
+
+        return parent::render($request, $e);
+    }
+
 }

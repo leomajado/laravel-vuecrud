@@ -26,7 +26,16 @@ class ProductsController extends Controller
      */
     public function getAll()
     {
-        return Products::orderBy('created_at','Desc')->paginate(10);
+        try {
+
+            return Products::orderBy('stock','Asc')->paginate(10);
+
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => 'Error',
+                'message' => $ex->getMessage()
+            ],500);
+        }
     }
 
     /**
