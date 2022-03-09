@@ -5414,6 +5414,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5426,6 +5428,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       },
       pagination: {},
       current_page: '',
+      last_page_url: '',
       modal_title: '',
       modal: 0,
       modify: false
@@ -5442,7 +5445,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 vm = _this;
-                if (page_url === 'all') page_url = 'api/products';
+                if (page_url === 'all') page_url = _this.$app_url + '/products';
                 _this.current_page = page_url;
                 _context.next = 5;
                 return axios.get(page_url).then(function (res) {
@@ -5464,9 +5467,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     makePagination: function makePagination(meta) {
+      console.log(meta.last_page_url);
       var pagination = {
         current_page: meta.current_page,
         last_page: meta.last_page,
+        last_page_url: meta.last_page_url,
         next_page_url: meta.next_page_url,
         prev_page_url: meta.prev_page_url
       };
@@ -5494,6 +5499,84 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         };
         this.product = modal_body;
       }
+    },
+    upd: function upd(product) {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var res, _res;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!_this2.modify) {
+                  _context2.next = 6;
+                  break;
+                }
+
+                _context2.next = 3;
+                return axios.put(_this2.$app_url + '/api/product/' + product.id, product).then(function (res) {
+                  _this2.list(_this2.current_page);
+
+                  _this2.closeModal();
+                });
+
+              case 3:
+                res = _context2.sent;
+                _context2.next = 9;
+                break;
+
+              case 6:
+                _context2.next = 8;
+                return axios.post(_this2.$app_url + '/api/product', product).then(function (res) {
+                  _this2.list(_this2.current_page);
+
+                  _this2.closeModal();
+                });
+
+              case 8:
+                _res = _context2.sent;
+
+              case 9:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    del: function del(id) {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var res;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                if (!confirm('Are you sure?')) {
+                  _context3.next = 4;
+                  break;
+                }
+
+                _context3.next = 3;
+                return axios["delete"](_this3.$app_url + '/api/product/' + id).then(function (res) {
+                  _this3.list(_this3.current_page);
+
+                  _this3.closeModal();
+                });
+
+              case 3:
+                res = _context3.sent;
+
+              case 4:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
     },
     closeModal: function closeModal() {
       this.modal = 0;
@@ -5532,6 +5615,7 @@ window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js
 
 Vue.component('product-component', (__webpack_require__(/*! ./components/ProductComponent.vue */ "./resources/js/components/ProductComponent.vue")["default"]));
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue"));
+Vue.prototype.$app_url = "http://localhost:8020";
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -29645,7 +29729,15 @@ var render = function () {
                 _vm._v(" "),
                 _c(
                   "button",
-                  { staticClass: "btn btn-primary", attrs: { type: "button" } },
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function ($event) {
+                        return _vm.upd(_vm.product)
+                      },
+                    },
+                  },
                   [_vm._v("Save")]
                 ),
               ]),
@@ -29687,9 +29779,18 @@ var render = function () {
                 [_vm._v("Edit\n                    ")]
               ),
               _vm._v(" "),
-              _c("button", { staticClass: "btn btn-danger" }, [
-                _vm._v("Delete"),
-              ]),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger",
+                  on: {
+                    click: function ($event) {
+                      return _vm.del(p.id)
+                    },
+                  },
+                },
+                [_vm._v("Delete\n                    ")]
+              ),
             ]),
           ])
         }),

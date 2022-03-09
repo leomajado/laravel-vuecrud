@@ -22,6 +22,8 @@ window.Vue = require('vue').default;
 Vue.component('product-component', require('./components/ProductComponent.vue').default);
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 
+Vue.prototype.$app_url = process.env.MIX_APP_URL
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

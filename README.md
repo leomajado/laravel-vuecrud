@@ -25,7 +25,27 @@
 
 ## Open a Terminal and run the following commands:  
 
-    **TODO: Add Details About Configuration**
+    1) composer install
+    
+    2) composer require laravel/ui
+
+    3) php artisan ui vue --auth
+
+    4) php artisan migrate:fresh --seed
+
+    5) Install nodejs and npm running these 2 commands below:
+
+       5.1) sudo apt install nodejs
+
+       5.2) sudo apt install npm
+
+    6) Check if Larvel Mix it's working fine:
+       
+       npm run dev or npm run watch
+
+    7) Add to your .env file the following variable: MIX_APP_URL="${APP_URL}"
+
+    8) Enjoy!
 
 ## License
 

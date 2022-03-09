@@ -31,7 +31,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{ modal_title }}</h5>
-                            <button @click="closeModal();" type="button" class="btn-close" data-dismiss="modal"></button>
+                        <button @click="closeModal();" type="button" class="btn-close" data-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <label for="name">Name:</label>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="modal-footer">
                         <button @click="closeModal()" type="button" class="btn btn-secondary">Close</button>
-                        <button type="button" class="btn btn-primary">Save</button>
+                        <button @click="upd(product)" type="button" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,9 @@
                         <button @click="modify=true; openModal(p)"
                                 class="btn btn-warning">Edit
                         </button>
-                        <button class="btn btn-danger">Delete</button>
+                        <button @click="del(p.id);"
+                            class="btn btn-danger">Delete
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -100,6 +102,7 @@
                 },
                 pagination: {},
                 current_page: '',
+                last_page_url: '',
                 modal_title: '',
                 modal: 0,
                 modify: false
@@ -108,7 +111,7 @@
         methods: {
             async list(page_url){
                 let vm = this
-                if(page_url==='all') page_url = 'api/products'
+                if(page_url==='all') page_url = this.$app_url+'/products'
                 this.current_page = page_url
                 const res = await axios.get(page_url)
                     .then(res => {
@@ -118,9 +121,11 @@
                     .catch(err => console.log(err))
             },
             makePagination(meta){
+                console.log(meta.last_page_url)
                 let pagination = {
                     current_page: meta.current_page,
                     last_page: meta.last_page,
+                    last_page_url: meta.last_page_url,
                     next_page_url: meta.next_page_url,
                     prev_page_url: meta.prev_page_url
                 }
@@ -146,6 +151,30 @@
                         stock: 0
                     }
                     this.product = modal_body
+                }
+            },
+            async upd(product){
+                if(this.modify){
+                    const res = await axios.put(this.$app_url+'/api/product/'+product.id,product)
+                    .then(res => {
+                        this.list(this.current_page)
+                        this.closeModal()
+                    })
+                } else {
+                    const res = await axios.post(this.$app_url+'/api/product',product)
+                    .then(res => {
+                        this.list(this.current_page)
+                        this.closeModal()
+                    });
+                }
+            },
+            async del(id){
+                if(confirm('Are you sure?')){
+                    const res = await axios.delete(this.$app_url+'/api/product/'+id)
+                    .then(res => {
+                        this.list(this.current_page)
+                        this.closeModal()
+                    });
                 }
             },
             closeModal(){

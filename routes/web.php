@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ProductsController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,9 +23,14 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::middleware('auth:sanctum')->group(function(){
+Route::group(['middleware' => 'auth'], function(){
 
-    Route::get('/products', [\App\Http\Controllers\ProductsController::class, 'index'])->name('products.index');
-    Route::get('/api/products', [\App\Http\Controllers\ProductsController::class, 'getAll']);
+    Route::get('/view/products', [App\Http\Controllers\ProductsController::class, 'index'])->name('products.index');
+
+    Route::get('/products', [ProductsController::class, 'getAll']);
+
+    Route::post('api/product', [ProductsController::class, 'store']);
+    Route::put('api/product/{id}', [ProductsController::class, 'update']);
+    Route::delete('api/product/{id}', [ProductsController::class, 'destroy']);
 
 });
